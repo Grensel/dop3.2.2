@@ -1,8 +1,8 @@
-import {FC, useState} from 'react';
+import { FC, memo, useCallback, useState } from 'react';
 
-const FIRST_BUTTON_BACKGROUND = {background: 'tomato'};
-const CONTAINER_STYLES = {display: 'flex', flexDirection: 'column', gap: 10};
-const BUTTON_STYLES = {border: 'none', outline: 'none', color: 'white', borderRadius: 5};
+const FIRST_BUTTON_BACKGROUND = { background: 'tomato' };
+const CONTAINER_STYLES = { display: 'flex', flexDirection: 'column', gap: 10 };
+const BUTTON_STYLES = { border: 'none', outline: 'none', color: 'white', borderRadius: 5 };
 
 type PropsType = { isChecked: boolean, onSetIsChecked: () => void };
 
@@ -11,15 +11,17 @@ type PropsType = { isChecked: boolean, onSetIsChecked: () => void };
 // If click to Checkbox component Button not re-render
 
 export const Task_2 = () => {
+  console.log('task_2 rendered');
+
   const [firstCount, setFirstCount] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleSetIsChecked = () => setIsChecked(!isChecked);
+  const handleSetIsChecked = useCallback(() => setIsChecked(!isChecked), [isChecked]);
 
-  const handlePlusCountValueClick = () => setFirstCount(prevFirstCount => prevFirstCount + 1);
+  const handlePlusCountValueClick = useCallback(() => setFirstCount(prevFirstCount => prevFirstCount + 1), []);
 
   return (
-    <div style={{...CONTAINER_STYLES} as any}>
+    <div style={{ ...CONTAINER_STYLES } as any}>
       <div>{`Count equal: ${firstCount}`}</div>
       <Button onPlusCountValueClick={handlePlusCountValueClick} />
       <Checkbox isChecked={isChecked} onSetIsChecked={handleSetIsChecked} />
@@ -27,21 +29,24 @@ export const Task_2 = () => {
   );
 };
 
-export const Button: FC<{ onPlusCountValueClick: () => void }> = ({onPlusCountValueClick}) => {
+export const Button: FC<{ onPlusCountValueClick: () => void }> = memo(({ onPlusCountValueClick }) => {
+  console.log('button rendered');
+
   return (
     <div>
       <button
-        style={{...FIRST_BUTTON_BACKGROUND, ...BUTTON_STYLES}}
+        style={{ ...FIRST_BUTTON_BACKGROUND, ...BUTTON_STYLES }}
         onClick={onPlusCountValueClick}
       >
         Plus first counter
       </button>
     </div>
   );
-};
+});
 
-export const Checkbox: FC<PropsType> = ({isChecked, onSetIsChecked}) => {
+export const Checkbox: FC<PropsType> = memo(({ isChecked, onSetIsChecked }) => {
+  console.log('Checkbox rendered');
   return (
     <input type="checkbox" checked={isChecked} onChange={onSetIsChecked} />
   );
-};
+});
